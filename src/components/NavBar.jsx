@@ -1,9 +1,23 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PiHandsPrayingDuotone } from "react-icons/pi";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { removeUser } from "../utils/userSlice";
 export default function NavBar() {
-  const user = useSelector((store) => store?.user);
+  const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+      dispatch(removeUser());
+      return navigate("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="navbar bg-gray-100">
@@ -20,7 +34,7 @@ export default function NavBar() {
 
           <div className="dropdown dropdown-end mx-10 flex justify-center">
             <p className=" text-lg  mx-4 items-center flex">
-              Welcome{" "}
+              Welcome{"   "}
               <PiHandsPrayingDuotone className=" text-yellow-600 size-8" />
               <span className=" font-medium cursor-pointer hover:bg-gray-300  px-3 py-2  rounded-md">
                 {user?.firstName}
@@ -48,7 +62,10 @@ export default function NavBar() {
                 <a className="text-lg">Settings</a>
               </li>
               <li>
-                <a className="text-lg hover:bg-red-400 hover:text-white">
+                <a
+                  className="text-lg hover:bg-red-400 hover:text-white"
+                  onClick={handleLogout}
+                >
                   Logout
                 </a>
               </li>
