@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { addUser, removeUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+
 export default function Login() {
   const [emailId, setEmailId] = useState("samantha@gmail.com");
   const [password, setPassword] = useState("Samantha@123");
@@ -22,6 +23,7 @@ export default function Login() {
       dispatch(addUser(res?.data));
       return navigate("/");
     } catch (err) {
+      dispatch(removeUser());
       console.error(err);
     }
   };
