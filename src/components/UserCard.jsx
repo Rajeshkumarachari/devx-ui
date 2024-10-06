@@ -1,9 +1,27 @@
 import { IoFemaleOutline } from "react-icons/io5";
 import { IoIosMale } from "react-icons/io";
 import { IoMaleFemaleOutline } from "react-icons/io5";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeUserFromFeed } from "../utils/FeedSlice";
 
 export default function UserCard({ user }) {
-  const { firstName, lastName, photoUrl, age, gender, about } = user;
+  const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
+  const dispatch = useDispatch();
+
+  const handleSendRequest = async (status, userId) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/send/" + status + "/" + userId,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeUserFromFeed(userId));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     user && (
@@ -12,7 +30,7 @@ export default function UserCard({ user }) {
           <img
             src={photoUrl}
             alt={firstName}
-            className="rounded-full size-[320px] object-cover  "
+            className="rounded-full size-[270px] object-cover  "
           />
         </figure>
         <div className="card-body">
@@ -36,10 +54,16 @@ export default function UserCard({ user }) {
           </div>
           <p className="  line-clamp-3">{about} </p>
           <div className="card-actions mx-2 my-4 justify-between">
-            <button className="px-3 py-2 rounded-md text-white bg-rose-500 hover:bg-rose-600">
+            <button
+              className="px-3 py-2 rounded-md text-white bg-rose-500 hover:bg-rose-600"
+              onClick={() => handleSendRequest("ignored", _id)}
+            >
               Ignore
             </button>
-            <button className="px-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600">
+            <button
+              className="px-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600"
+              onClick={() => handleSendRequest("interested", _id)}
+            >
               Send Request
             </button>
           </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { addRequest } from "../utils/requestSlice";
 import { IoFemaleOutline } from "react-icons/io5";
 import { IoIosMale } from "react-icons/io";
