@@ -59,7 +59,9 @@ export default function NavBar() {
                 </Link>
               </li>
               <li>
-                <a className="text-lg">Settings</a>
+                <Link to="connection">
+                  <a className="text-lg">Connections</a>
+                </Link>
               </li>
               <li>
                 <a
