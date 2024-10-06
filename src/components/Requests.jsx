@@ -1,77 +1,29 @@
-// import axios from "axios";
-// import { BASE_URL } from "../utils/constants";
-// import { useDispatch, useSelector } from "react-redux";
-// import { addRequest } from "../utils/requestSlice";
-// import { useEffect } from "react";
-
-// export default function Requests() {
-//   const dispatch = useDispatch();
-//   const requests = useSelector((store) => store.requests);
-
-//   const fetchRequest = async () => {
-//     try {
-//       const res = await axios.get(BASE_URL + "/user/requests/received", {
-//         withCredentials: true,
-//       });
-//       dispatch(addRequest(res?.data?.data));
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-//   useEffect(() => {
-//     fetchRequest();
-//   }, []);
-//   if (!requests) return;
-//   if (requests.length === 0) return <h1> No Requests found</h1>;
-
-//   return (
-//     <div className=" flex flex-col items-center">
-//       <h1 className=" text-center font-semibold text-3xl my-4">
-//         Your Connections Requests
-//       </h1>
-//       <div className="flex flex-col  justify-center my-2 w-[50%]   ">
-//         {requests.map((request) => {
-//           console.log(request);
-//           const { firstName, lastName, photoUrl, about, _id } =
-//             request.fromUserId;
-//           return (
-//             <div
-//               key={_id}
-//               className="flex m-2 p-4 border rounded-lg hover:bg-blue-50"
-//             >
-//               <div className="w-1/4">
-//                 <img
-//                   src={photoUrl}
-//                   alt={firstName}
-//                   className="size-40  object-cover rounded-full      transition-all duration-300 hover:scale-110 "
-//                 />
-//               </div>
-//               <div className=" w-3/4 px-5 ">
-//                 <h1 className=" text-left mt-3 text-xl font-medium">
-//                   {firstName + " " + lastName}
-//                 </h1>
-//                 <p className="  line-clamp-3 text-gray-500">{about} </p>
-//               </div>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </div>
-//   );
-// }
-
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { addRequest } from "../utils/requestSlice";
 import { IoFemaleOutline } from "react-icons/io5";
 import { IoIosMale } from "react-icons/io";
 import { IoMaleFemaleOutline } from "react-icons/io5";
+import { removeUser } from "../utils/userSlice";
 
 const Requests = () => {
   const requests = useSelector((store) => store.requests);
   const dispatch = useDispatch();
+
+  const reviewRequest = async (status, _id) => {
+    try {
+      const res = axios.post(
+        BASE_URL + "/request/review/" + status + "/" + _id,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeUser(_id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchRequests = async () => {
     try {
@@ -136,10 +88,16 @@ const Requests = () => {
               <p className=" line-clamp-3">{about}</p>
             </div>
             <div className=" flex justify-between mx-10 my-5">
-              <button className="px-3 py-2 rounded-md text-white bg-rose-500 hover:bg-rose-600">
+              <button
+                className="px-3 py-2 rounded-md text-white bg-rose-500 hover:bg-rose-600"
+                onClick={() => reviewRequest("rejected", request._id)}
+              >
                 Reject
               </button>
-              <button className="px-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600">
+              <button
+                className="px-3 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600"
+                onClick={() => reviewRequest("accepted", request._id)}
+              >
                 Accept
               </button>
             </div>
