@@ -64,6 +64,11 @@ export default function NavBar() {
                 </Link>
               </li>
               <li>
+                <Link to="requests">
+                  <a className="text-lg"> Requests </a>
+                </Link>
+              </li>
+              <li>
                 <a
                   className="text-lg hover:bg-red-400 hover:text-white"
                   onClick={handleLogout}
